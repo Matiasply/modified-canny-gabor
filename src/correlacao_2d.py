@@ -117,7 +117,6 @@ def correlacao_rgb(img, kernel):
 
     return saida
 
-
 def main ():
     img = cv2.imread("download.jpeg")
     kernel = carregar_matriz("filtros/sobel_x.txt")
