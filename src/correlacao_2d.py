@@ -103,10 +103,25 @@ def correlacao_gray(img_path, kernel_path):
 
     return resultado
 
+def correlacao_rgb(img, kernel):
+
+    B = img[:, :, 0]
+    G = img[:, :, 1]
+    R = img[:, :, 2]
+
+    B_f = correlacao_2d(B, kernel)
+    G_f = correlacao_2d(G, kernel)
+    R_f = correlacao_2d(R, kernel)
+
+    saida = np.stack([B_f, G_f, R_f], axis=2)
+
+    return saida
+
 
 def main ():
     img = cv2.imread("download.jpeg")
     kernel = carregar_matriz("filtros/sobel_x.txt")
+    gx = correlacao_rgb(img, kernel)
 
     plt.imshow(np.clip(gx, 0, 255).astype(np.uint8))
     plt.show()
