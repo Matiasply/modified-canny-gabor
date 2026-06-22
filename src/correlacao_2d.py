@@ -33,8 +33,14 @@ def correlacao_2d(img, kernel):
 
     if img.ndim != 2:
         raise ValueError("correlacao_2d só aceita imagem 2D")
+    
+    if kernel.ndim != 2:
+        raise ValueError("Kernel deve ser 2D")
+    
+    if kernel.shape[0] % 2 == 0 or kernel.shape[1] % 2 == 0:
+        raise ValueError("Kernel deve ter dimensões ímpares")
 
-    altura, largura = img.shape[:2]
+    altura, largura = img.shape
     k_altura, k_largura = kernel.shape
 
     pad_h = k_altura // 2
@@ -113,7 +119,7 @@ def correlacao_rgb(img, kernel):
     G_f = correlacao_2d(G, kernel)
     R_f = correlacao_2d(R, kernel)
 
-    saida = np.stack([B_f, G_f, R_f], axis=2)
+    saida = np.stack([B_f, G_f, R_f], axis=2) # np.stack empilha as matrizes 2D formando uma matriz 3D
 
     return saida
 
