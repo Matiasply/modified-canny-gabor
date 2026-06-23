@@ -29,6 +29,45 @@ def carregar_matriz(arquivo_path):
 
     return np.array(matriz, dtype=float)
 
+def correlacao_2d(img, kernel):
+
+    if img.ndim != 2:
+        raise ValueError("correlacao_2d só aceita imagem 2D")
+    
+    if kernel.ndim != 2:
+        raise ValueError("Kernel deve ser 2D")
+    
+    if kernel.shape[0] % 2 == 0 or kernel.shape[1] % 2 == 0:
+        raise ValueError("Kernel deve ter dimensões ímpares")
+
+    altura, largura = img.shape
+    k_altura, k_largura = kernel.shape
+
+    pad_h = k_altura // 2
+    pad_w = k_largura // 2
+
+    # adiciona borda de zeros
+    img_padded = np.pad(
+        img,
+        ((pad_h, pad_h), (pad_w, pad_w)),
+        mode='constant'
+    )
+
+    saida = np.zeros_like(img, dtype=np.float32)
+
+    for i in range(altura):
+        for j in range(largura):
+
+            regiao = img_padded[
+                i:i+k_altura,
+                j:j+k_largura
+            ]
+
+            valor = np.sum(regiao * kernel)
+
+            saida[i, j] = valor
+
+    return saida
 
 def correlacao_gray(img_path, kernel_path):
     """
@@ -70,13 +109,26 @@ def correlacao_gray(img_path, kernel_path):
 
     return resultado
 
+def correlacao_rgb(img, kernel):
+
+    B = img[:, :, 0]
+    G = img[:, :, 1]
+    R = img[:, :, 2]
+
+    B_f = correlacao_2d(B, kernel)
+    G_f = correlacao_2d(G, kernel)
+    R_f = correlacao_2d(R, kernel)
+
+    saida = np.stack([B_f, G_f, R_f], axis=2) # np.stack empilha as matrizes 2D formando uma matriz 3D
+
+    return saida
 
 def main ():
     img = cv2.imread("download.jpeg")
+    kernel = carregar_matriz("filtros/sobel_x.txt")
+    gx = correlacao_rgb(img, kernel)
 
-    gx = correlacao_gray("download.jpeg", "sobel_x.txt")
-
-    plt.imshow(gx, cmap='gray')
+    plt.imshow(np.clip(gx, 0, 255).astype(np.uint8))
     plt.show()
 
 if(__name__ == "__main__"):
