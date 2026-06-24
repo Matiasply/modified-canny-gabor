@@ -69,45 +69,12 @@ def correlacao_2d(img, kernel):
 
     return saida
 
-def correlacao_gray(img_path, kernel_path):
-    """
-    img_path: Caminho da imagem
-    kernel_path: Caminho do arquivo .json ou .txt com a máscara
-    """
-    img = cv2.imread(img_path)
-
-    if (img is None):
-        raise FileNotFoundError(f"Não foi possível abrir a imagem: {img_path}")
-
-    kernel = carregar_matriz(kernel_path).astype(float)
-
-    # Converte imagem para tons de cinza
+def correlacao_gray(img, kernel):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY).astype(float)
 
-    altura_img, largura_img = gray.shape
+    correlacao = correlacao_2d(gray, kernel)
 
-    hy, hx = kernel.shape
-
-    # Kernel deve ter dimensões ímpares para centralizar corretamente
-    if (hy % 2 == 0 or hx % 2 == 0):
-        raise ValueError("Kernel deve ter dimensões ímpares (ex: 3x3, 5x5)")
-
-    pad_y = hy // 2
-    pad_x = hx // 2
-
-    # Extensão por zeros com padding adequado para o kernel
-    imagem_extendida = np.pad(gray, ((pad_y, pad_y), (pad_x, pad_x)), mode='constant', constant_values=0)
-
-    # Matriz resultante iniciada com zeros
-    resultado = np.zeros((altura_img, largura_img), dtype=float)
-
-    for y in range(altura_img):
-        for x in range(largura_img):
-            # Janela da imagem que a máscara irá operar
-            janela = imagem_extendida[y: y + hy, x: x + hx]
-            resultado[y, x] = np.sum(janela * kernel)
-
-    return resultado
+    return correlacao
 
 def correlacao_rgb(img, kernel):
 
