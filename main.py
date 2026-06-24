@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import cv2
 from src.correlacao_2d import *
 from src.gerador_filtros import *
+from src.filtragem_orientada import *
 
 def main ():
     img = cv2.imread("download.jpeg")
@@ -11,10 +12,7 @@ def main ():
     parametros_gabor = ler_parametros("config/gabor.json")
 
     filtros = gerador_parametrico(parametros_gabor)
-
-    plt.imshow(filtros[0], cmap='gray')
-
-    plt.show()
-
+    filtragem = filtro_orientado(img, filtros)
+    
 if(__name__ == "__main__"):
     main()
