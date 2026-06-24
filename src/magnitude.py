@@ -2,29 +2,22 @@ import numpy as np
 import cv2
 
 def magnitude_combinada(filtros_orientados):
-    """
-    Calcula a magnitude combinada a partir de um dicionário de imagens filtradas.
-    
-    Parâmetros:
-    filtros_orientados (dict): Dicionário onde as chaves são os ângulos e os valores são as imagens filtradas.
-    
-    """
-    # Inicializa a imagem de magnitude com zeros
-    magnitude = {angulo: np.zeros_like(filtro, dtype=np.float32) for angulo, filtro in filtros_orientados.items()}
-    
-    # Soma os quadrados das imagens filtradas
-    for angulo, filtro in filtros_orientados.items():
-        magnitude[angulo] += np.square(filtro.astype(np.float32))
-    
-    # Calcula a raiz quadrada da soma dos quadrados
-    for angulo in magnitude:
-        magnitude[angulo] = np.sqrt(magnitude[angulo])
-    
-    # Normaliza a imagem para o intervalo [0, 255]
-    for angulo in magnitude:
-        magnitude[angulo] = cv2.normalize(magnitude[angulo], None, 0, 255, cv2.NORM_MINMAX)
-    
-    return {angulo: img.astype(np.uint8) for angulo, img in magnitude.items()}
+
+    magnitude = {}
+
+    for angulo, img in filtros_orientados.items():
+
+        # separa canais
+        B = img[:, :, 0].astype(np.float32)
+        G = img[:, :, 1].astype(np.float32)
+        R = img[:, :, 2].astype(np.float32)
+
+        # Di Zenzo (norma L2)
+        mag = np.sqrt(R**2 + G**2 + B**2)
+
+        magnitude[angulo] = mag
+
+    return magnitude
 
 def magnitude_maxima(magnitudes):
 
