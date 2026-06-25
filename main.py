@@ -29,11 +29,5 @@ def main ():
     plt.axis('off')
     plt.show()
 
-    #for angulo, filtro in magnitudes.items():
-        #plt.subplot(2, 4, int(angulo/22.5)+1)
-        #plt.imshow(filtro, cmap='gray')
-        #plt.title(f"{angulo}°")
-        #plt.axis('off')
-
 if(__name__ == "__main__"):
     main()
