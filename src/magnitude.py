@@ -29,4 +29,4 @@ def magnitude_maxima(magnitudes):
     orientacao_final = angulos_array[indices_maximos]
     magnitude_final = np.max(bloco_3d, axis=0)
 
-    return orientacao_final, magnitude_final.astype(np.uint8)
+    return orientacao_final, magnitude_final
