@@ -50,3 +50,5 @@ def non_maximum_suppression(orientacao_final, magnitude_final):
                 imagem_nms[i, j] = mag_atual
             else:
                 imagem_nms[i, j] = 0  # Suprime o pixel (zera)
+
+    return imagem_nms
