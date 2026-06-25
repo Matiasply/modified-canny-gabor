@@ -15,14 +15,7 @@ def main ():
     filtros = gerador_parametrico(parametros_gabor)
     filtragem = filtro_orientado(img, filtros)
     magitudes = magnitude_combinada(filtragem)
-
-    for angulo, filtro in magitudes.items():
-        plt.subplot(2, 4, int(angulo/22.5)+1)
-        plt.imshow(filtro, cmap='gray')
-        plt.title(f"{angulo}°")
-        plt.axis('off')
-
-    plt.show()
+    orientacao, magnitude_final = magnitude_maxima(magitudes)
 
 if(__name__ == "__main__"):
     main()
