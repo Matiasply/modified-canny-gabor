@@ -30,6 +30,9 @@ def carregar_matriz(arquivo_path):
     return np.array(matriz, dtype=float)
 
 def correlacao_2d(img, kernel):
+    """
+    Recebe uma imagem 2D e um kernel 2D, e devolve a correlação com extensão por zero entre eles.
+    """
 
     if img.ndim != 2:
         raise ValueError("correlacao_2d só aceita imagem 2D")
@@ -70,6 +73,12 @@ def correlacao_2d(img, kernel):
     return saida
 
 def correlacao_gray(img, kernel):
+    """
+    Recebe uma imagem colorida e um kernel 2D, converte a imagem para escala de cinza e 
+    devolve a correlação com extensão por zero entre eles.
+    Usado para Canny tradicional, que trabalha com imagens em escala de cinza.
+    """
+    
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY).astype(float)
 
     correlacao = correlacao_2d(gray, kernel)
@@ -77,6 +86,10 @@ def correlacao_gray(img, kernel):
     return correlacao
 
 def correlacao_rgb(img, kernel):
+    """
+    Recebe uma imagem colorida e um kernel 2D, e devolve a correlação com extensão por zero entre eles.
+    A correlação é feita separadamente para cada canal (R, G, B).
+    """
 
     B = img[:, :, 0]
     G = img[:, :, 1]
@@ -89,14 +102,3 @@ def correlacao_rgb(img, kernel):
     saida = np.stack([B_f, G_f, R_f], axis=2) # np.stack empilha as matrizes 2D formando uma matriz 3D
 
     return saida
-
-def main ():
-    img = cv2.imread("download.jpeg")
-    kernel = carregar_matriz("filtros/sobel_x.txt")
-    gx = correlacao_rgb(img, kernel)
-
-    plt.imshow(np.clip(gx, 0, 255).astype(np.uint8))
-    plt.show()
-
-if(__name__ == "__main__"):
-    main()

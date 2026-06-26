@@ -2,13 +2,19 @@ import json
 import numpy as np
 
 def ler_parametros(caminho):
+    """
+    Lê um arquivo JSON e devolve um dicionário com os parâmetros.
+    """
 
     with open(caminho, 'r', encoding="utf-8") as arquivo:
         parametros = json.load(arquivo)
     
     return parametros
 
-def gerador_parametrico(parametros):
+def gerar_filtros_gabor_orientados(parametros):
+    """
+    Recebe um dicionário de parâmetros e devolve um dicionário de filtros Gabor {orientação: filtro}.
+    """
 
     tamanho_mascara = parametros['tamanho_mascara']
     sigma = parametros['sigma']
@@ -20,12 +26,15 @@ def gerador_parametrico(parametros):
 
     for angulo in parametros['orientacoes_graus']:
         radiano = np.radians(angulo)
-        resultado[angulo] = filtros_gabor(radiano, sigma, lambd, gama, psi, tamanho_mascara)
+        resultado[angulo] = gerar_filtro_gabor(radiano, sigma, lambd, gama, psi, tamanho_mascara)
     
     return resultado
 
 
-def filtros_gabor(theta, sigma, lambd, gama, phi, mascara_tam):
+def gerar_filtro_gabor(theta, sigma, lambd, gama, psi, mascara_tam):
+    """
+    Gera um filtro Gabor 2D com os parâmetros fornecidos.
+    """
 
     if mascara_tam % 2 == 0:
         raise ValueError("A máscara deve ter dimensões ímpares")
@@ -42,7 +51,7 @@ def filtros_gabor(theta, sigma, lambd, gama, phi, mascara_tam):
     # Aplica a Gaussiana
     exp_factor = np.exp(-0.5 * (x_theta**2 + (gama**2) * (y_theta**2)) / (sigma**2))
     # Aplica a função cosseno
-    cos_factor = np.cos(2 * np.pi * x_theta / lambd + phi)
+    cos_factor = np.cos(2 * np.pi * x_theta / lambd + psi)
 
     gabor_filter = exp_factor * cos_factor
 
