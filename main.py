@@ -32,35 +32,35 @@ def main ():
             img = cv2.imread(str(arquivo))
 
             # Canny tradicional
-            # kernel_gaussiano = carregar_matriz("filtros/gaussiano_5x5.txt")
-            # imagem_suavizada_gray = correlacao_gray(img, kernel_gaussiano)
-            # magnitudes, orientacoes = magnitude_orientada_sobel(imagem_suavizada_gray)
+            kernel_gaussiano = carregar_matriz("filtros/gaussiano_5x5.txt")
+            imagem_suavizada_gray = correlacao_gray(img, kernel_gaussiano)
+            magnitudes, orientacoes = magnitude_orientada_sobel(imagem_suavizada_gray)
 
-            # # Imagem das magnitudes
-            # imagem_magnitudes = expandir_histograma(magnitudes)
-            # plt.imshow(imagem_magnitudes, cmap='gray')
-            # plt.axis('off')
-            # plt.savefig(f'./canny_tradicional/magnitude/{arquivo.stem}_MagTradicional.png', bbox_inches='tight', pad_inches=0)
-            # plt.close()
+            # Imagem das magnitudes
+            imagem_magnitudes = expandir_histograma(magnitudes)
+            plt.imshow(imagem_magnitudes, cmap='gray')
+            plt.axis('off')
+            plt.savefig(f'./canny_tradicional/magnitude/{arquivo.stem}_MagTradicional.png', bbox_inches='tight', pad_inches=0)
+            plt.close()
 
-            # nms = non_maximum_suppression(orientacoes, magnitudes)
+            nms = non_maximum_suppression(orientacoes, magnitudes)
 
-            # # Imagem do NMS
-            # imagem_nms = expandir_histograma(nms)
-            # plt.imshow(imagem_nms, cmap='gray')
-            # plt.axis('off')
-            # plt.savefig(f'./canny_tradicional/nms/{arquivo.stem}_NMSTradicional.png', bbox_inches='tight', pad_inches=0)
-            # plt.close()
+            # Imagem do NMS
+            imagem_nms = expandir_histograma(nms)
+            plt.imshow(imagem_nms, cmap='gray')
+            plt.axis('off')
+            plt.savefig(f'./canny_tradicional/nms/{arquivo.stem}_NMSTradicional.png', bbox_inches='tight', pad_inches=0)
+            plt.close()
 
-            # max_val = nms.max()
-            # Thigh = max_val * 0.2
-            # Tlow = max_val * 0.1
+            max_val = nms.max()
+            Thigh = max_val * 0.2
+            Tlow = max_val * 0.1
 
-            # resultado = histerese(nms, Tlow=Tlow, Thigh=Thigh)
-            # plt.imshow(resultado, cmap='gray')
-            # plt.axis('off')
-            # plt.savefig(f'./canny_tradicional/resultado/{arquivo.stem}_ResultadoTradicional.png', bbox_inches='tight', pad_inches=0)
-            # plt.close()
+            resultado = histerese(nms, Tlow=Tlow, Thigh=Thigh)
+            plt.imshow(resultado, cmap='gray')
+            plt.axis('off')
+            plt.savefig(f'./canny_tradicional/resultado/{arquivo.stem}_ResultadoTradicional.png', bbox_inches='tight', pad_inches=0)
+            plt.close()
                                       
             # Canny modificado
             for nome_filtro, filtros_gabor in bancos_gabor:
