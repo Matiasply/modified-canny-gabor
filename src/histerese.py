@@ -16,31 +16,27 @@ def histerese(magnitude_nms, Tlow, Thigh):
     # saída inicial
     resultado = np.zeros((comprimento, largura), dtype=np.uint8)
 
-    # marca fortes como 255
+    # marca fortes como 255 e fracos como 100
     resultado[forte] = 255
+    resultado[fraco] = 100
 
     # 8 vizinhos
     vizinhos = [(-1,-1), (-1,0), (-1,1),
                 (0,-1),         (0,1),
                 (1,-1),  (1,0), (1,1)]
-
+    
     # 2. propagação (histerese)
     # se um fraco encostar em forte, ele vira forte
-    mudou = True
+    pilha_forte = list(zip(*np.where(forte)))
+    while pilha_forte:
+        i, j = pilha_forte.pop()
 
-    while mudou:
-        mudou = False
+        for di, dj in vizinhos:
+            ni, nj = i + di, j + dj
 
-        for i in range(1, comprimento - 1):
-            for j in range(1, largura - 1):
-
-                if fraco[i, j] and resultado[i, j] == 0:
-
-                    # verifica conexão com pixel forte
-                    for di, dj in vizinhos:
-                        if resultado[i + di, j + dj] == 255:
-                            resultado[i, j] = 255
-                            mudou = True
-                            break
+            if 0 <= ni < comprimento and 0 <= nj < largura:
+                if fraco[ni, nj] and resultado[ni, nj] == 100:
+                    resultado[ni, nj] = 255
+                    pilha_forte.append((ni, nj))
 
     return resultado

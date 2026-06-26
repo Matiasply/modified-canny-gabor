@@ -1,5 +1,4 @@
 import json
-import matplotlib.pyplot as plt
 import cv2
 import numpy as np
 
@@ -49,28 +48,20 @@ def correlacao_2d(img, kernel):
     pad_h = k_altura // 2
     pad_w = k_largura // 2
 
+    img_array = np.asarray(img, dtype=np.float32)
+    kernel_array = np.asarray(kernel, dtype=np.float32)
+
     # adiciona borda de zeros
     img_padded = np.pad(
-        img,
+        img_array,
         ((pad_h, pad_h), (pad_w, pad_w)),
         mode='constant'
     )
 
-    saida = np.zeros_like(img, dtype=np.float32)
+    janelas = np.lib.stride_tricks.sliding_window_view(img_padded, (k_altura, k_largura))
+    saida = np.tensordot(janelas, kernel_array, axes=((2, 3), (0, 1)))
 
-    for i in range(altura):
-        for j in range(largura):
-
-            regiao = img_padded[
-                i:i+k_altura,
-                j:j+k_largura
-            ]
-
-            valor = np.sum(regiao * kernel)
-
-            saida[i, j] = valor
-
-    return saida
+    return saida.astype(np.float32, copy=False)
 
 def correlacao_gray(img, kernel):
     """
