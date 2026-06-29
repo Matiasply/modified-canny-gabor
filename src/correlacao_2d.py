@@ -70,7 +70,7 @@ def correlacao_gray(img, kernel):
     Usado para Canny tradicional, que trabalha com imagens em escala de cinza.
     """
     
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY).astype(float)
+    gray = 0.299 * img[:, :, 2] + 0.587 * img[:, :, 1] + 0.114 * img[:, :, 0]
 
     correlacao = correlacao_2d(gray, kernel)
 
