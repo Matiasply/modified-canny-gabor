@@ -27,6 +27,14 @@ def main ():
     pasta_parametros = Path('./filtros_gabor')
     bancos_gabor = carregar_bancos_gabor(pasta_parametros)
 
+    for nome_filtro, filtros_gabor in bancos_gabor:
+        for i in filtros_gabor.keys():
+            filtro = expandir_histograma(filtros_gabor[i])
+            plt.imshow(filtro, cmap='gray')
+            plt.axis('off')
+            plt.savefig(f'./imagens_filtros_gabor/{nome_filtro}/{nome_filtro}_{i}.png', bbox_inches='tight', pad_inches=0)
+            plt.close()
+
     for arquivo in pasta.iterdir():
         if arquivo.is_file():
             img = cv2.imread(str(arquivo))
@@ -75,34 +83,34 @@ def main ():
                     plt.savefig(f'./canny_modificado/magnitude/{nome_filtro}/{arquivo.stem}_{nome_filtro}_Mag{i}Modificado.png', bbox_inches='tight', pad_inches=0)
                     plt.close()
 
-                    orientacao_final, magnitude_final = magnitude_maxima_gabor(magnitudes)
+                orientacao_final, magnitude_final = magnitude_maxima_gabor(magnitudes)
 
-                    # Imagem das magnitudes finais
-                    imagem_magnitudes_final = expandir_histograma(magnitude_final)
-                    plt.imshow(imagem_magnitudes_final, cmap='gray')
-                    plt.axis('off')
-                    plt.savefig(f'./canny_modificado/magnitude/{nome_filtro}/{arquivo.stem}_{nome_filtro}_MagFinalModificado.png', bbox_inches='tight', pad_inches=0)
-                    plt.close()
+                # Imagem das magnitudes finais
+                imagem_magnitudes_final = expandir_histograma(magnitude_final)
+                plt.imshow(imagem_magnitudes_final, cmap='gray')
+                plt.axis('off')
+                plt.savefig(f'./canny_modificado/magnitude/{nome_filtro}/{arquivo.stem}_{nome_filtro}_MagFinalModificado.png', bbox_inches='tight', pad_inches=0)
+                plt.close()
 
-                    nms = non_maximum_suppression(orientacao_final, magnitude_final)
+                nms = non_maximum_suppression(orientacao_final, magnitude_final)
 
-                    # Imagem do NMS
-                    imagem_nms = expandir_histograma(nms)
-                    plt.imshow(imagem_nms, cmap='gray')
-                    plt.axis('off')
-                    plt.savefig(f'./canny_modificado/nms/{arquivo.stem}_{nome_filtro}_NMSModificado.png', bbox_inches='tight', pad_inches=0)
-                    plt.close()
+                # Imagem do NMS
+                imagem_nms = expandir_histograma(nms)
+                plt.imshow(imagem_nms, cmap='gray')
+                plt.axis('off')
+                plt.savefig(f'./canny_modificado/nms/{arquivo.stem}_{nome_filtro}_NMSModificado.png', bbox_inches='tight', pad_inches=0)
+                plt.close()
 
-                    max_val = nms.max()
-                    Thigh = max_val * 0.2
-                    Tlow = max_val * 0.1
+                max_val = nms.max()
+                Thigh = max_val * 0.2
+                Tlow = max_val * 0.1
 
-                    resultado = histerese(nms, Tlow=Tlow, Thigh=Thigh)
+                resultado = histerese(nms, Tlow=Tlow, Thigh=Thigh)
 
-                    plt.imshow(resultado, cmap='gray')
-                    plt.axis('off')
-                    plt.savefig(f'./canny_modificado/resultado/{arquivo.stem}_{nome_filtro}_ResultadoModificado.png', bbox_inches='tight', pad_inches=0)
-                    plt.close()
+                plt.imshow(resultado, cmap='gray')
+                plt.axis('off')
+                plt.savefig(f'./canny_modificado/resultado/{arquivo.stem}_{nome_filtro}_ResultadoModificado.png', bbox_inches='tight', pad_inches=0)
+                plt.close()
 
 
 if(__name__ == "__main__"):
